@@ -8,31 +8,6 @@ module.exports = class KeyGenerator {
          : 'Hello World!';
     }
 
-    generateKeys() {
-      return _sodium.ready.then(() => {
-        let sodium = _sodium;
-        this.keys = config.seed && config.seed.length > 0 
-          ? sodium.crypto_box_seed_keypair(config.seed)
-          : sodium.crypto_box_keypair();
-        //return {'publicKey':keys.publicKey, 'privateKey':keys.privateKey}
-      }).catch((err) => {
-        console.log('Error occurred' + err.message);
-      });
-    }
-
-    encrypt() {
-        assert(this.keys.publicKey, 'Public Key not provided for encryption');
-        return _sodium.ready.then(() => {
-          let sodium = _sodium;
-          let encryptedMessageLength = sodium.crypto_box_SEALBYTES + this.message.length;
-          let encryptedMessage = Buffer.alloc(encryptedMessageLength);
-          encryptedMessage = sodium.crypto_box_seal(this.message, this.keys.publicKey);
-          return encryptedMessage;
-        }).catch((err) => {
-          console.log('Error occurred' + err.message);
-        });
-    }
-
     decrypt(args){
         assert(args.encryptedMessage, 'Message not provided for decryption');
         assert(this.keys.publicKey, 'Public Key not provided for decryption');
@@ -54,7 +29,31 @@ module.exports = class KeyGenerator {
         let decoder = new TextDecoder('ascii');
         return decoder.decode(args.decryptedMessage) == this.message;
     }
+    
+    encrypt() {
+        assert(this.keys.publicKey, 'Public Key not provided for encryption');
+        return _sodium.ready.then(() => {
+          let sodium = _sodium;
+          let encryptedMessageLength = sodium.crypto_box_SEALBYTES + this.message.length;
+          let encryptedMessage = Buffer.alloc(encryptedMessageLength);
+          encryptedMessage = sodium.crypto_box_seal(this.message, this.keys.publicKey);
+          return encryptedMessage;
+        }).catch((err) => {
+          console.log('Error occurred' + err.message);
+        });
+    }
 
+    generateKeys() {
+        return _sodium.ready.then(() => {
+          let sodium = _sodium;
+          this.keys = config.seed && config.seed.length > 0 
+            ? sodium.crypto_box_seed_keypair(config.seed)
+            : sodium.crypto_box_keypair();
+          //return {'publicKey':keys.publicKey, 'privateKey':keys.privateKey}
+        }).catch((err) => {
+          console.log('Error occurred' + err.message);
+        });
+    }
     async process() {
         // Generate new keys
         await this.generateKeys();
