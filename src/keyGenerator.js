@@ -3,16 +3,17 @@ const config = require('../config.json');
 const _sodium = require('libsodium-wrappers');
 module.exports = class KeyGenerator {
     constructor(args){
-        assert(args, 'Argument object needs to be provided');
         this.message = config.message && config.message.length > 0
-         ? args.message 
+         ? config.message 
          : 'Hello World!';
     }
 
     generateKeys() {
       return _sodium.ready.then(() => {
         let sodium = _sodium;
-        this.keys = sodium.crypto_box_keypair();
+        this.keys = config.seed && config.seed.length > 0 
+          ? sodium.crypto_box_seed_keypair(config.seed)
+          : sodium.crypto_box_keypair();
         //return {'publicKey':keys.publicKey, 'privateKey':keys.privateKey}
       }).catch((err) => {
         console.log('Error occurred' + err.message);

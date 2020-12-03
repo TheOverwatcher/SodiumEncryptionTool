@@ -1,12 +1,11 @@
 const KeyGenerator = require('../src/keyGenerator.js')
 const assert = require('assert')
+const config = require('../config.json');
 
 describe('Sodium Encryption Tool provides a public/private key pair', function(){
     let encryptedMessage, decryptedMessage, keys, keyGen;
     before(async function(){
-        keyGen = new KeyGenerator({
-            'message': 'Hello World'
-        });
+        keyGen = new KeyGenerator();
         await keyGen.generateKeys();
         keys = keyGen.keys;
 
@@ -35,5 +34,15 @@ describe('Sodium Encryption Tool provides a public/private key pair', function()
         assert(keyGen.doesMessageMatch({
             'decryptedMessage':decryptedMessage
         }),'Messages do not match after decryption.');
+    });
+    it('Seeding a key returns the same key each time', function(){
+        config.seed = config.seed && config.seed.length === 0 ? "abcdefghi" : config.seed;
+        let keyGen1 = new KeyGenerator();
+        keyGen1.generateKeys();
+        let keyGen2 = new KeyGenerator();
+        keyGen2.generateKeys();
+        let keysMatch = keyGen1.privateKey === keyGen2.privateKey 
+            && keyGen1.publicKey === keyGen2.publicKey;
+        assert(keysMatch, 'Keys do not match given the seed');
     });
 })
