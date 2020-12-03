@@ -1,0 +1,24 @@
+{
+  "name": "sodiumencryptiontool",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "start": "node src/index.js",
+    "test": "mocha"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/TheOverwatcher/SodiumEncryptionTool.git"
+  },
+  "author": "Grayson Bonds",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/TheOverwatcher/SodiumEncryptionTool/issues"
+  },
+  "homepage": "https://github.com/TheOverwatcher/SodiumEncryptionTool#readme",
+  "dependencies": {
+    "libsodium-wrappers": "^0.7.8",
+    "mocha": "^8.2.1"
+  }
+}
