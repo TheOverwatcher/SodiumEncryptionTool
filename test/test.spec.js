@@ -34,4 +34,9 @@ describe('Sodium Encryption Tool provides a public/private key pair', function()
     it('Public and Private Keys can decrypt the encrypted message', async function(){
         assert(decryptedMessage && decryptedMessage.toString().length > 0, 'Invalid encrypted message provided');
     });
+    it('Verify decrypted message matches the original message', function() {
+        assert(keyGen.doesMessageMatch({
+            'decryptedMessage':decryptedMessage
+        }),'Messages do not match after decryption.');
+    });
 })

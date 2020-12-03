@@ -44,7 +44,9 @@ module.exports = class KeyGenerator {
         });
     }
 
-    encryptDecryptTest(){
-
+    doesMessageMatch(args){
+        assert(args.decryptedMessage, 'Decrypted message not provided');
+        let decoder = new TextDecoder('ascii');
+        return decoder.decode(args.decryptedMessage) == this.message;
     }
 }
