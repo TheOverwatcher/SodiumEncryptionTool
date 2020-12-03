@@ -10,8 +10,9 @@ module.exports = class KeyGenerator {
         this.filename = config.filename && config.filename.length > 0 
           ? config.filename 
           : 'secrets.txt'; 
-        this.stringKeys = {}
+        this.stringKeys = {};
         this.hexKeys = {};
+        this.outputDir = './output/';
     }
 
     async changeKeysToHex(){
@@ -65,20 +66,21 @@ module.exports = class KeyGenerator {
           this.keys = config.seed && config.seed.length > 0 
             ? sodium.crypto_box_seed_keypair(config.seed)
             : sodium.crypto_box_keypair();
-          //return {'publicKey':keys.publicKey, 'privateKey':keys.privateKey}
+          return true;
         }).catch((err) => {
           console.log('Error occurred' + err.message);
         });
     }
     async process() {
         // Generate new keys
-        await this.generateKeys();
+        let result = await this.generateKeys();
 
         // Validate the keys
-        let result = await this.validateKeys();
-        return result;
+        result = result && await this.validateKeys();
 
         // Output the keys
+        result = result && await this.writeKeysToFile();
+        return result;
     }
 
     async validateKeys(){
@@ -89,16 +91,17 @@ module.exports = class KeyGenerator {
         });
     }
 
-    writeKeysToFile(){
+    async writeKeysToFile(){
         // Return true if successful
-        this.changeKeysToHex();
+        await this.changeKeysToHex();
         let data = 'PUBLIC_KEY=' + this.hexKeys.publicKey +'\nPRIVATE_KEY=' + this.hexKeys.privateKey;
-        fs.writeFile(this.filename, data, (err) => {
+        fs.writeFile(this.outputDir + this.filename, data, (err) => {
             if(err) {
                 console.log('Error occurred when writing to file');
                 throw err;
             }
             console.log('File has been saved under ' + this.filename);
         });
+        return true;
     }
 }
