@@ -29,7 +29,19 @@ module.exports = class KeyGenerator {
     }
 
     decrypt(args){
-
+        assert(args.encryptedMessage, 'Message not provided for decryption');
+        assert(args.publicKey, 'Public Key not provided for decryption');
+        assert(args.privateKey, 'Private Key not provided for decryption');
+        return _sodium.ready.then(() => {
+          let sodium = _sodium;
+          let decryptedMessage = Buffer.alloc(args.encryptedMessage.length);
+          decryptedMessage = sodium.crypto_box_seal_open(
+            args.encryptedMessage, args.publicKey, args.privateKey
+          );
+          return decryptedMessage;
+        }).catch((err) => {
+          console.log('Error occurred ' + err.message);
+        });
     }
 
     encryptDecryptTest(){
