@@ -18,6 +18,11 @@ describe('Sodium Encryption Tool provides a public/private key pair', function()
     it('Private Key provided', function() {
         assert(keys.privateKey, 'Invalid private key provided');
     });
-
+    it('Public Key can encrypt a message', async function(){
+        let encryptedMessage = await keyGen.encrypt({
+            'publicKey':keys.publicKey,
+        });
+        assert(encryptedMessage.toString().length > 0, 'Invalid encrypted message provided');
+    });
 
 })
