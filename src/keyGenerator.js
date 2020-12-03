@@ -100,7 +100,6 @@ module.exports = class KeyGenerator {
                 console.log('Error occurred when writing to file');
                 throw err;
             }
-            console.log('File has been saved under ' + this.filename);
         });
         return true;
     }
