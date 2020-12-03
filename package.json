@@ -11,7 +11,7 @@
     "type": "git",
     "url": "git+https://github.com/TheOverwatcher/SodiumEncryptionTool.git"
   },
-  "author": "Grayson Bonds",
+  "author": "Grayson Bonds <graysonbonds@gmail.com>",
   "license": "ISC",
   "bugs": {
     "url": "https://github.com/TheOverwatcher/SodiumEncryptionTool/issues"
