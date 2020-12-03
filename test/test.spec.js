@@ -6,5 +6,15 @@ describe('Sodium Encryption Tool provides a public/private key pair', function()
         let keyGen = new KeyGenerator();
         let results = keyGen.generateKeys();
         assert(results.publicKey);
-    })
+    });
+    it('Private Key provided', function() {
+        let keyGen = new KeyGenerator();
+        let results = keyGen.generateKeys();
+        assert(results.privateKey);
+    });
+    it('The keys are not fake', function() {
+        let keyGen = new KeyGenerator();
+        let results = keyGen.generateKeys();
+        assert(results.privateKey);
+    });
 })

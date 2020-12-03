@@ -4,6 +4,6 @@ module.exports = class KeyGenerator {
     }
 
     generateKeys() {
-      return {'publicKey':this.falseKey}
+      return {'publicKey':this.falseKey, 'privateKey': this.falseKey}
     }
 }
