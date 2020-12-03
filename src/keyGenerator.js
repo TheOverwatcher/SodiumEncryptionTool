@@ -92,7 +92,7 @@ module.exports = class KeyGenerator {
     writeKeysToFile(){
         // Return true if successful
         this.changeKeysToHex();
-        let data = 'PUBLIC_KEY=' + this.hexKeys.publicKey +'\nPRIVATEKEY=' + this.hexKeys.privateKey;
+        let data = 'PUBLIC_KEY=' + this.hexKeys.publicKey +'\nPRIVATE_KEY=' + this.hexKeys.privateKey;
         fs.writeFile(this.filename, data, (err) => {
             if(err) {
                 console.log('Error occurred when writing to file');
