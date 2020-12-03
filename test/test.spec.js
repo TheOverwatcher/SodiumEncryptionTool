@@ -49,6 +49,12 @@ describe('Sodium Encryption Tool provides a public/private key pair', function()
             && keyGen1.publicKey === keyGen2.publicKey;
         assert(keysMatch, 'Keys do not match given the seed');
     });
+    it('Change public and private key buffers to strings', async function(){
+        await keyGen.changeKeysToHex();
+        let result = typeof keyGen.hexKeys.publicKey === 'string' 
+            && typeof keyGen.hexKeys.privateKey === 'string'
+        assert(result,'Buffers were not converted to strings');
+    });
     it('Keys are written to a file', async function(){
         keyGen.writeKeysToFile();
         let fileExists = fs.existsSync(keyGen.filename);

@@ -10,6 +10,18 @@ module.exports = class KeyGenerator {
         this.filename = config.filename && config.filename.length > 0 
           ? config.filename 
           : 'secrets.txt'; 
+        this.stringKeys = {}
+        this.hexKeys = {};
+    }
+
+    async changeKeysToHex(){
+        return _sodium.ready.then(() => {
+            let sodium = _sodium;
+            this.hexKeys.publicKey = sodium.to_hex(this.keys.publicKey);
+            this.hexKeys.privateKey = sodium.to_hex(this.keys.privateKey);
+        }).catch((err) => {
+            console.log('Error occurred ' + err.message);
+        });
     }
 
     decrypt(args){
