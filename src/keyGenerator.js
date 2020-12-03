@@ -1,9 +1,12 @@
 const { assert } = require('console');
+const config = require('../config.json');
 const _sodium = require('libsodium-wrappers');
 module.exports = class KeyGenerator {
     constructor(args){
         assert(args, 'Argument object needs to be provided');
-        this.message = args.message ? args.message : 'Hello World!';
+        this.message = config.message && config.message.length > 0
+         ? args.message 
+         : 'Hello World!';
     }
 
     generateKeys() {
