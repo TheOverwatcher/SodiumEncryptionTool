@@ -1,6 +1,7 @@
 const KeyGenerator = require('../src/keyGenerator.js')
 const assert = require('assert')
 const config = require('../config.json');
+const fs = require('fs');
 
 describe('Sodium Encryption Tool provides a public/private key pair', function(){
     let encryptedMessage, decryptedMessage, keys, keyGen;
@@ -47,5 +48,19 @@ describe('Sodium Encryption Tool provides a public/private key pair', function()
         let keysMatch = keyGen1.privateKey === keyGen2.privateKey 
             && keyGen1.publicKey === keyGen2.publicKey;
         assert(keysMatch, 'Keys do not match given the seed');
+    });
+    it('Keys are written to a file', async function(){
+        keyGen.writeKeysToFile();
+        let fileExists = fs.existsSync(keyGen.filename);
+        let fileContents = '';
+        if (fileExists){
+            fileContents = fs.readFileSync(keyGen.filename, "utf8", (err, data) => {
+                if(err) {
+                    console.log('Error occurred when writing to file');
+                    throw err;
+                }
+                assert(data.length > 0, 'Unable to write keys to a file.')
+            });
+        }
     });
 })

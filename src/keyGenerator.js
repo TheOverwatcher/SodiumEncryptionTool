@@ -1,11 +1,15 @@
 const { assert } = require('console');
 const config = require('../config.json');
+const fs = require('fs');
 const _sodium = require('libsodium-wrappers');
 module.exports = class KeyGenerator {
     constructor(args){
         this.message = config.message && config.message.length > 0
-         ? config.message 
-         : 'Hello World!';
+          ? config.message 
+          : 'Hello World!';
+        this.filename = config.filename && config.filename.length > 0 
+          ? config.filename 
+          : 'secrets.txt'; 
     }
 
     decrypt(args){
@@ -60,7 +64,6 @@ module.exports = class KeyGenerator {
 
         // Validate the keys
         let result = await this.validateKeys();
-        console.log(result);
         return result;
 
         // Output the keys
@@ -71,6 +74,18 @@ module.exports = class KeyGenerator {
             'decryptedMessage': await this.decrypt({
                 'encryptedMessage': await this.encrypt()
             })
+        });
+    }
+
+    writeKeysToFile(){
+        // Return true if successful
+        let data = 'PUBLIC_KEY=' + this.keys.publicKey +'\nPRIVATEKEY=' + this.keys.privateKey;
+        fs.writeFile(this.filename, data, (err) => {
+            if(err) {
+                console.log('Error occurred when writing to file');
+                throw err;
+            }
+            console.log('File has been saved under ' + this.filename);
         });
     }
 }
