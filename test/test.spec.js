@@ -7,20 +7,17 @@ describe('Sodium Encryption Tool provides a public/private key pair', function()
         keyGen = new KeyGenerator({
             'message': 'Hello World'
         });
-        keys = await keyGen.generateKeys();
+        await keyGen.generateKeys();
+        keys = keyGen.keys;
 
-        encryptedMessage = await keyGen.encrypt({
-            'publicKey':keys.publicKey,
-        });
+        encryptedMessage = await keyGen.encrypt();
 
         decryptedMessage = await keyGen.decrypt({
-            'encryptedMessage':encryptedMessage,
-            'publicKey':keys.publicKey,
-            'privateKey':keys.privateKey
+            'encryptedMessage':encryptedMessage
         });
     });
     it('Sodium is ready to generate a pair of keys', function(){
-        assert(keys, 'Keys not provided. Sodium has not returned them.')
+        assert(keyGen.keys, 'Keys not provided. Sodium has not returned them.')
     });
     it('Public Key provided', function() {
         assert(keys.publicKey, 'Invalid public key provided');
