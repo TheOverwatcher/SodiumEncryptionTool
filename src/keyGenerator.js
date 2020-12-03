@@ -54,4 +54,24 @@ module.exports = class KeyGenerator {
         let decoder = new TextDecoder('ascii');
         return decoder.decode(args.decryptedMessage) == this.message;
     }
+
+    async process() {
+        // Generate new keys
+        await this.generateKeys();
+
+        // Validate the keys
+        let result = await this.validateKeys();
+        console.log(result);
+        return result;
+
+        // Output the keys
+    }
+
+    async validateKeys(){
+        return this.doesMessageMatch({
+            'decryptedMessage': await this.decrypt({
+                'encryptedMessage': await this.encrypt()
+            })
+        });
+    }
 }

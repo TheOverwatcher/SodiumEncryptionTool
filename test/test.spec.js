@@ -15,6 +15,9 @@ describe('Sodium Encryption Tool provides a public/private key pair', function()
             'encryptedMessage':encryptedMessage
         });
     });
+    it('Verify the whole process completes', async function(){
+        assert(await keyGen.process() === true,'Process did not fully complete');
+    })
     it('Sodium is ready to generate a pair of keys', function(){
         assert(keyGen.keys, 'Keys not provided. Sodium has not returned them.')
     });
