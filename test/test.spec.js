@@ -1,4 +1,4 @@
-const KeyGenerator = require('../src/index.js')
+const KeyGenerator = require('../src/keyGenerator.js')
 const assert = require('assert')
 
 describe('Sodium Encryption Tool provides a public/private key pair', function(){
