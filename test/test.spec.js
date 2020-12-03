@@ -5,7 +5,6 @@ describe('Sodium Encryption Tool provides a public/private key pair', function()
     let keys, keyGen;
     before(async function(){
         keyGen = new KeyGenerator({
-            'defaultKey': 'defaultKey',
             'message': 'Hello World'
         });
         keys = await keyGen.generateKeys();
@@ -19,5 +18,6 @@ describe('Sodium Encryption Tool provides a public/private key pair', function()
     it('Private Key provided', function() {
         assert(keys.privateKey, 'Invalid private key provided');
     });
+
 
 })
