@@ -3,4 +3,6 @@ const KeyGenerator = require('../src/keyGenerator.js')
 
 const keyGen = new KeyGenerator();
 
-keyGen.process();
+if(async () => await keyGen.process() === true){
+    console.log('Successfully generated keys and an ecrypted message.')
+}
