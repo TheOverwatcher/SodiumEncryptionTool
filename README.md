@@ -12,4 +12,8 @@ random or seeded keys.
 - **filename**: name of the output file. Default is *secrets.txt*
 
 ## Output
-The output file is labeled per the filename under the output directory.
+The output file is labeled per the filename under the output directory. The output 
+contains the following:
+- **PUBLIC_KEY**: The hexadecimal version of the public key
+- **PRIVATE_KEY**: The hexadecimal version of the private key
+- **MESSAGE**: The hexadecimal version of the encrypted message
