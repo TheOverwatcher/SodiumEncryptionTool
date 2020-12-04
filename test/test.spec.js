@@ -17,22 +17,22 @@ describe('Sodium Encryption Tool provides a public/private key pair', function()
         });
     });
     it('Verify the whole process completes', async function(){
-        assert(await keyGen.process() === true,'Process did not fully complete');
+        assert(await keyGen.process() === true,'Process did not fully complete.');
     })
     it('Sodium is ready to generate a pair of keys', function(){
         assert(keyGen.keys, 'Keys not provided. Sodium has not returned them.')
     });
     it('Public Key was generated', function() {
-        assert(keys.publicKey, 'Invalid public key provided');
+        assert(keys.publicKey, 'Invalid public key provided.');
     });
     it('Private Key was generated', function() {
-        assert(keys.privateKey, 'Invalid private key provided');
+        assert(keys.privateKey, 'Invalid private key provided.');
     });
     it('Public Key can encrypt a message', async function(){
-        assert(encryptedMessage.toString().length > 0, 'Invalid encrypted message provided');
+        assert(encryptedMessage.toString().length > 0, 'Invalid encrypted message provided.');
     });
     it('Public and Private Keys can decrypt the encrypted message', async function(){
-        assert(decryptedMessage && decryptedMessage.toString().length > 0, 'Invalid encrypted message provided');
+        assert(decryptedMessage && decryptedMessage.toString().length > 0, 'Invalid encrypted message provided.');
     });
     it('The decrypted message matches the original message', function() {
         assert(keyGen.doesMessageMatch({
@@ -47,13 +47,13 @@ describe('Sodium Encryption Tool provides a public/private key pair', function()
         keyGen2.generateKeys();
         let keysMatch = keyGen1.privateKey === keyGen2.privateKey 
             && keyGen1.publicKey === keyGen2.publicKey;
-        assert(keysMatch, 'Keys do not match given the seed');
+        assert(keysMatch, 'Keys do not match given the seed.');
     });
     it('Change public and private key buffers to strings', async function(){
-        await keyGen.changeKeysToHex();
+        await keyGen.createHexKeys();
         let result = typeof keyGen.hexKeys.publicKey === 'string' 
             && typeof keyGen.hexKeys.privateKey === 'string'
-        assert(result,'Buffers were not converted to strings');
+        assert(result,'Buffers were not converted to strings.');
     });
     it('Keys are written to a file', async function(){
         keyGen.writeKeysToFile();
@@ -68,5 +68,12 @@ describe('Sodium Encryption Tool provides a public/private key pair', function()
                 assert(data.length > 0, 'Unable to write keys to a file.')
             });
         }
+    });
+    it('Message is output as a string', async function() {
+        await keyGen.createHexMessage({
+            'encryptedMessage':encryptedMessage
+        });
+        let result = typeof keyGen.hexMessage === 'string';
+        assert( result , 'Message was not converted to string.');
     });
 })

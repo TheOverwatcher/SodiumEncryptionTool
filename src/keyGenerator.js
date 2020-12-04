@@ -3,7 +3,7 @@ const config = require('../config.json');
 const fs = require('fs');
 const _sodium = require('libsodium-wrappers');
 module.exports = class KeyGenerator {
-    constructor(args){
+    constructor(){
         this.message = config.message && config.message.length > 0
           ? config.message 
           : 'Hello World!';
@@ -15,11 +15,21 @@ module.exports = class KeyGenerator {
         this.outputDir = './output/';
     }
 
-    async changeKeysToHex(){
+    createHexKeys(){
         return _sodium.ready.then(() => {
             let sodium = _sodium;
             this.hexKeys.publicKey = sodium.to_hex(this.keys.publicKey);
             this.hexKeys.privateKey = sodium.to_hex(this.keys.privateKey);
+        }).catch((err) => {
+            console.log('Error occurred ' + err.message);
+        });
+    }
+
+    createHexMessage(args){
+        assert(args.encryptedMessage, 'Encrypted message not provided for conversion');
+        return _sodium.ready.then(() => {
+            let sodium = _sodium;
+            this.hexMessage = sodium.to_hex(args.encryptedMessage);
         }).catch((err) => {
             console.log('Error occurred ' + err.message);
         });
@@ -93,7 +103,7 @@ module.exports = class KeyGenerator {
 
     async writeKeysToFile(){
         // Return true if successful
-        await this.changeKeysToHex();
+        await this.createHexKeys();
         let data = 'PUBLIC_KEY=' + this.hexKeys.publicKey +'\nPRIVATE_KEY=' + this.hexKeys.privateKey;
         fs.writeFile(this.outputDir + this.filename, data, (err) => {
             if(err) {
