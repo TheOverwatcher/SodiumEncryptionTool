@@ -2,6 +2,7 @@ const { assert } = require('console');
 const config = require('../config.json');
 const fs = require('fs');
 const _sodium = require('libsodium-wrappers');
+const StringBuilder = require('node-stringbuilder');
 module.exports = class KeyGenerator {
     constructor(){
         this.message = config.message && config.message.length > 0
@@ -104,7 +105,17 @@ module.exports = class KeyGenerator {
     async writeKeysToFile(){
         // Return true if successful
         await this.createHexKeys();
-        let data = 'PUBLIC_KEY=' + this.hexKeys.publicKey +'\nPRIVATE_KEY=' + this.hexKeys.privateKey;
+        let encryptedMessage =  await this.encrypt();
+        await this.createHexMessage({
+            'encryptedMessage':encryptedMessage
+        });
+        let data = new StringBuilder('PUBLIC_KEY=')
+            .append(this.hexKeys.publicKey)
+            .append('\nPRIVATE_KEY=')
+            .append(this.hexKeys.privateKey)
+            .append('\nMESSAGE=')
+            .append(this.hexMessage)
+            .toString();
         fs.writeFile(this.outputDir + this.filename, data, (err) => {
             if(err) {
                 console.log('Error occurred when writing to file');
