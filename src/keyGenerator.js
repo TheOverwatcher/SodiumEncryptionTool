@@ -13,6 +13,14 @@ module.exports = class KeyGenerator {
           : 'secrets.txt'; 
         this.stringKeys = {};
         this.hexKeys = {};
+        this.configKeys = {
+            'publicKey': config.publicKey && config.publicKey.length > 0 
+                ? Buffer.from(config.publicKey,'hex')
+                : undefined,
+            'privateKey': config.privateKey && config.privateKey.length > 0 
+                ? Buffer.from(config.privateKey,'hex')
+                : undefined
+        };
         this.outputDir = './output/';
     }
 
@@ -43,9 +51,13 @@ module.exports = class KeyGenerator {
         return _sodium.ready.then(() => {
           let sodium = _sodium;
           let decryptedMessage = Buffer.alloc(args.encryptedMessage.length);
-          decryptedMessage = sodium.crypto_box_seal_open(
-            args.encryptedMessage, this.keys.publicKey, this.keys.privateKey
-          );
+          decryptedMessage = this.useConfigKeys()
+            ? sodium.crypto_box_seal_open(
+              args.encryptedMessage, this.configKeys.publicKey, this.configKeys.privateKey
+            )
+            : sodium.crypto_box_seal_open(
+                args.encryptedMessage, this.keys.publicKey, this.keys.privateKey
+            );
           return decryptedMessage;
         }).catch((err) => {
           console.log('Error occurred ' + err.message);
@@ -64,7 +76,9 @@ module.exports = class KeyGenerator {
           let sodium = _sodium;
           let encryptedMessageLength = sodium.crypto_box_SEALBYTES + this.message.length;
           let encryptedMessage = Buffer.alloc(encryptedMessageLength);
-          encryptedMessage = sodium.crypto_box_seal(this.message, this.keys.publicKey);
+          encryptedMessage = this.useConfigKeys()
+            ? sodium.crypto_box_seal(this.message, this.configKeys.publicKey)
+            : sodium.crypto_box_seal(this.message, this.keys.publicKey);
           return encryptedMessage;
         }).catch((err) => {
           console.log('Error occurred' + err.message);
@@ -79,7 +93,7 @@ module.exports = class KeyGenerator {
             : sodium.crypto_box_keypair();
           return true;
         }).catch((err) => {
-          console.log('Error occurred' + err.message);
+          console.log('Error occurred ' + err.message);
         });
     }
     async process() {
@@ -92,6 +106,11 @@ module.exports = class KeyGenerator {
         // Output the keys
         result = result && await this.writeKeysToFile();
         return result;
+    }
+
+    useConfigKeys(){
+        return (config.publicKey && config.publicKey.length > 0) 
+            && (config.privateKey && config.privateKey.length > 0);
     }
 
     async validateKeys(){
@@ -110,9 +129,9 @@ module.exports = class KeyGenerator {
             'encryptedMessage':encryptedMessage
         });
         let data = new StringBuilder('PUBLIC_KEY=')
-            .append(this.hexKeys.publicKey)
+            .append(this.useConfigKeys() ? config.publicKey : this.hexKeys.publicKey)
             .append('\nPRIVATE_KEY=')
-            .append(this.hexKeys.privateKey)
+            .append(this.useConfigKeys() ? config.privateKey : this.hexKeys.privateKey)
             .append('\nMESSAGE=')
             .append(this.hexMessage)
             .toString();
