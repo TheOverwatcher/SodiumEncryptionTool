@@ -10,6 +10,9 @@ random or seeded keys.
 - **seed**: provide this to generate the same key pair each time, leave blank to
     generate a random pair
 - **filename**: name of the output file. Default is *secrets.txt*
+- **publicKey**: optional parameter of a hex key to use for encrypting and 
+    or decrypting a message
+- **privateKey**: optional parameter of a hex key to use for decrypting a message
 
 ## Output
 The output file is labeled per the filename under the output directory. The output 
